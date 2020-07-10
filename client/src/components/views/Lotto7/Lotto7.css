@@ -1,0 +1,148 @@
+/* 年度選択画面 */
+    #selectDayDiv {
+        margin-top: 10%;
+    }
+
+/* 区別選択画面 */
+    #selectGroupDiv {
+        display: none;
+        margin-top: 10%;
+    }
+
+/* ロト番号入力画面 */
+    #selectLuckyNumverDiv {
+        display: none;
+    }
+
+/* ロト情報表示 */
+    .div-style ul{
+        display: flex;
+        list-style:none;
+        padding:0;
+        margin:0;	
+    }
+    .div-style li:first-child{
+        margin-right: 5px;
+    }
+    .div-style li{
+        width: 50%;
+        display: block;
+        padding: 9px;
+        border:1px solid #DDDDDD;
+        margin-bottom: 10px;
+        border-radius: 3px;
+    }
+    .div-style li > label{
+        display: block;
+        float: left;
+        margin-top: -19px;
+        background: #FFFFFF;
+        /* height: 14px; */
+        padding: 2px 5px 2px 5px;
+        color: #B9B9B9;
+        font-size: 14px;
+        overflow: hidden;
+    }
+    .div-style input,
+    .div-style select 
+    {
+        box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        width: 100%;
+        display: block;
+        outline: none;
+        border: none;
+        height: 25px;
+        line-height: 25px;
+        font-size: 16px;
+        padding: 0;
+    }
+    .div-style li > span{
+        background: #F3F3F3;
+        display: block;
+        padding: 3px;
+        margin: 0 -9px -9px -9px;
+        text-align: center;
+        color: #C0C0C0;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 11px;
+    }
+
+
+/* ロト番号入力テーブル */
+    .luckyNumberTable{
+        text-align: center;
+    }
+
+    .luckyNumberTable .luckyNumberBox {
+        justify-content: space-evenly;
+    }
+        
+    .luckyNumberTable .luckyNumber {
+        width: 34px;
+        flex: none;
+        padding: 0px;
+        text-align: center;
+        border-radius: .25rem;
+        border-top-left-radius: 0.25rem !important;
+        border-top-right-radius: 0.25rem !important;
+        border-bottom-right-radius: 0.25rem !important;
+        border-bottom-left-radius: 0.25rem !important;
+    }
+
+    .luckyNumberTable .luckyNumberError {
+        box-shadow: 0 0 0 0.2rem #ff000d5b;
+    }
+
+    .luckyNumberTable tbody tr td {
+        vertical-align: middle;
+    }
+
+    .luckyNumberTable .winNum{
+        font-weight: bold;
+        box-shadow: 0 0 0 0.2rem gold;
+    }
+
+
+/* loading */
+    #loading {
+        display: none;
+        width: 100%;  
+        height: 100%;  
+        top: 0px;
+        left: 0px;
+        position: fixed;  
+        display: block;  
+        opacity: 0.7;  
+        background-color: #fff;  
+        z-index: 99;  
+        text-align: center; 
+    } 
+        
+    #loading-image {  
+        position: absolute;  
+        top: 50%;  
+        left: 45%; 
+        z-index: 100; 
+    }
+
+/* lotoLogo */
+    .lotoLogo {
+        position: relative;
+        text-align: center;
+        margin-top: 5%;
+    }
+
+
+/* モバイル */
+    @media (max-width: 426px) {
+        .luckyNumberTable .luckyNumber {
+            width: 25px;
+            margin-left: 2px;
+            margin-right: 2px;
+        }
+    }
+
+
+

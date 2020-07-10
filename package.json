@@ -22,11 +22,13 @@
     "cors": "^2.8.5",
     "debug": "^4.1.1",
     "express": "^4.17.1",
+    "fs": "0.0.1-security",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.26.0",
     "mongoose": "^5.9.19",
     "react-redux": "^5.0.7",
     "saslprep": "^1.0.3",
+    "selenium-webdriver": "^4.0.0-alpha.7",
     "supports-color": "^7.1.0"
   },
   "devDependencies": {

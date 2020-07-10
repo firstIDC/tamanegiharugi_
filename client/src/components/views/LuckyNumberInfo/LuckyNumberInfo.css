@@ -1,0 +1,21 @@
+/* LuckyNumberInfoSections */
+.luckyNumberInfoTable {
+    border: 1px solid #dee2e6;
+}
+
+.luckyNumberInfoTable thead th{
+    text-align: center;
+}
+
+.luckyNumberInfoTable th {
+    background-color: #eaf1f9;
+    text-align: left;
+}
+
+.luckyNumberInfoTable .luckyBonusRight td{
+    text-align: right;
+}
+
+.luckyNumberInfoTable td {
+    text-align: center;
+}

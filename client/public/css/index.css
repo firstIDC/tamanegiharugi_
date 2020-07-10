@@ -1,12 +1,1 @@
-.container{
-    display: flex;
-}
-
-.container div{
-    width: 25%;
-    height: 80px;
-    background-color: red;
-    border: 1px solid black;
-    margin-left: 5px;
-    margin-right: 5px;
-}
+* { font-family: "Sawarabi Gothic"; }
