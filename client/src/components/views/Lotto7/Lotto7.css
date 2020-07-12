@@ -134,14 +134,60 @@
         margin-top: 5%;
     }
 
+/* modal */
+    @media (min-width: 576px){
+        .modal-dialog {
+            max-width: 500px;
+            margin: 16.75rem auto;
+        }
+
+        .win1st{
+            height: 15rem;
+            background-image: url(/imgs/1st.png);
+            background-repeat: no-repeat;
+            background-position-y: center;
+            margin-left: 25%;
+        }
+
+        .win2st{
+            height: 15rem;
+            background-image: url(/imgs/2st.png);
+            background-repeat: no-repeat;
+            background-position-y: center;
+            margin-left: 25%;
+        }
+
+        /* .modal-body{
+            height: 15rem;
+            background-image: url(/imgs/1st_Edit.png);
+            background-repeat: no-repeat;
+            background-position-y: center;
+            margin-left: 25%;
+        } */
+    }
+
 
 /* モバイル */
-    @media (max-width: 426px) {
+/* @media (max-width: 426px) { */
+    @media (max-width: 576px) {
+    /* ロト番号入力テーブル */
         .luckyNumberTable .luckyNumber {
             width: 25px;
             margin-left: 2px;
             margin-right: 2px;
         }
+    /* modal */
+        .modal-dialog {
+            max-width: 350px;
+            margin: 16.75rem auto;
+            pointer-events: none;
+            
+            /* position: relative;
+            width: auto;
+            margin: 16.5rem;
+            pointer-events: none;*/
+        } 
+
     }
 
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Container, Table, Form, FormControl, Button} from 'react-bootstrap';
+import { Container, Table, Form, FormControl, Button, Modal} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Lotto7.css'
 import $ from "jquery";
@@ -14,6 +14,13 @@ function Lotto7() {
     const [LuckyNumberInfoList, setluckyNumberInfoList] = useState([])
     const [LuckyNumberGroupList, setluckyNumberGroupList] = useState([])
     const [selectDaysList, setSelectDaysList] = useState([])
+
+    //모달 시작
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);   
+    //모달 끝
 
     useEffect(() => {
         setLuckyNumberLine([
@@ -55,6 +62,7 @@ function Lotto7() {
         //区別
         const group = document.getElementById("selectedGroup").value;
 
+        let winResult = null;
         for (let i = 0; i < LuckyNumberInfoList.length; i++) {
             if (LuckyNumberInfoList[i].区別 === group) {
                 const checkMainNum = [
@@ -70,15 +78,30 @@ function Lotto7() {
                     LuckyNumberInfoList[i].ボーナス数字1.substring(1,3)
                     ,LuckyNumberInfoList[i].ボーナス数字2.substring(1,3)
                 ]
-                checkLotto7(numbersList, checkMainNum, checkBonusNum);
+                winResult = checkLotto7(numbersList, checkMainNum, checkBonusNum);
                 break; 
             }
         }
 
         javascript:window.scrollTo(0,0)
+        if (winResult != 99) {
+            console.log(winResult);
+            handleShow();
+        }
+        
+        // switch (winResult) {
+        //     case value:
+        //         handleShow()
+        //         break;
+        
+        //     default:
+        //         break;
+        // }
+        
     }
 
     const checkLotto7 = (numbersList, checkMainNum, checkBonusNum) => {
+        let winResult = 99;
         if (isValidation) {
             let luckyNumberFinalResult = [];
             for (let i = 0; i < numbersList.length; i++) {
@@ -87,30 +110,46 @@ function Lotto7() {
                     case 7:
                         //1等(申込数字が本数字7個と全て一致)
                         luckyNumberFinalResult.push({"index":numbersList[i].index,"rank": "1等","winNumber":result[1]})
+                        winResult = 1
                         break;
                     case 6:
                         const bonusResult2stAnd3st = util.isMatchNum(numbersList[i].luckyNumbers,checkBonusNum);
                         if (bonusResult2stAnd3st[0] > 0) {
                             //2等(申込数字が本数字6個と一致し、更にボーナス数字2個のうち1個と一致) 
                             luckyNumberFinalResult.push({"index":numbersList[i].index,"rank": "2等","winNumber":result[1].concat(bonusResult2stAnd3st[1]),"bonusNums": bonusResult2stAnd3st[1]})
+                            if (winResult > 2) {
+                                winResult = 2
+                            }
                         } else {
                             //3等(申込数字が本数字6個と一致)
                             luckyNumberFinalResult.push({"index":numbersList[i].index,"rank": "3等","winNumber":result[1]})
+                            if (winResult > 3) {
+                                winResult = 3
+                            }
                         }
                         break;
                     case 5:
                         //4等(申込数字が本数字5個と一致)
                         luckyNumberFinalResult.push({"index":numbersList[i].index,"rank": "4等","winNumber":result[1]})
+                        if (winResult > 4) {
+                            winResult = 4
+                        }
                         break;
                     case 4:
                         //5等(申込数字が本数字4個と一致)
                         luckyNumberFinalResult.push({"index":numbersList[i].index,"rank": "5等","winNumber":result[1]})
+                        if (winResult > 5) {
+                            winResult = 5
+                        }
                         break;
                     case 3:
                         const bonusResult6st = util.isMatchNum(numbersList[i].luckyNumbers,checkBonusNum);
                         if (bonusResult6st[0] === 2) {
                             //6等(申込数字が本数字3個と一致し、更にボーナス数字1個または2個と一致)
                             luckyNumberFinalResult.push({"index":numbersList[i].index,"rank": "6等","winNumber":result[1].concat(bonusResult6st[1]),"bonusNums": bonusResult6st[1]})
+                            if (winResult > 6) {
+                                winResult = 6
+                            }
                         } else {
                             //残念
                             luckyNumberFinalResult.push({"index":numbersList[i].index,"rank": "残念","winNumber":result[1]})
@@ -134,6 +173,7 @@ function Lotto7() {
                 return luckyNumberLine
             }))
             console.log(luckyNumberLine);
+            return winResult
         } else {
             alert("本数字入力欄に誤りがあります。赤い枠の所を正しく入力してください。")
         }
@@ -315,7 +355,22 @@ function Lotto7() {
         setLuckyNumberLine(luckyNumberLine.filter(i => {if (i.index !== Number(event.target.value)) return luckyNumberLine}))
     }
     return (
-        <div>
+        <>
+            <Modal show={show} onHide={handleClose}>
+                {/* <Modal.Header className='win1st' closeButton> */}
+                <Modal.Header className='win2st' closeButton>
+                </Modal.Header>
+                <Modal.Body>サイト製作者に寄付ボタン</Modal.Body>
+                {/* <Modal.Footer>
+                <Button variant="secondary" onClick={handleClose}>
+                    Close
+                </Button>
+                <Button variant="primary" onClick={handleClose}>
+                    Save Changes
+                </Button>
+                </Modal.Footer> */}
+            </Modal>
+
         <div id="loading"><img id="loading-image" src="/imgs/loading.gif" alt="Loading..." /></div>
         <br />
         <Container>
@@ -373,7 +428,6 @@ function Lotto7() {
                                 <th>#</th>
                                 <th>本数字</th>
                                 <th>等数</th>
-                                {/* <th>当選金額</th> */}
                                 <th>削除</th>
                             </tr>
                         </thead>
@@ -390,7 +444,6 @@ function Lotto7() {
                                             ))}
                                         </td>
                                         <td>{item.rank}</td>
-                                        {/* <td>{item.money}</td> */}
                                         <td><Button variant="danger" size="sm" value={item.index} block onClick={removeLuckyNumber}>行削除</Button></td>
                                     </tr>
                                 </React.Fragment>
@@ -407,7 +460,7 @@ function Lotto7() {
                 </form>
             </div>
         </Container>
-        </div>
+        </>
     )
 }
 

@@ -3,6 +3,8 @@ import { Container, Table, Form, FormControl, Button} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Lotto7.css'
 import $ from "jquery";
+import styled from "styled-components"
+
 const axios = require("axios");
 const util = require('../../../util/util');
 const moment = require("moment")
@@ -37,12 +39,15 @@ function Lotto7() {
             } else {return (('0' + today.month()).slice(-2));}
         };
 
+        //util.getLuckyNumber(thisYear, thisMonth(), "loto7")
+        
         getLuckyNumber(thisYear, thisMonth())
 
         axios.get("/api/luckyNumber/getSelectDaysList").then(res => {
             setSelectDaysList(createSelectDaysList());
             document.getElementById("selectedDay").value = null;
         })
+
     }, [])
 
     const checkWinLotto = () => {
@@ -370,7 +375,6 @@ function Lotto7() {
                                 <th>#</th>
                                 <th>本数字</th>
                                 <th>等数</th>
-                                {/* <th>当選金額</th> */}
                                 <th>削除</th>
                             </tr>
                         </thead>
@@ -387,7 +391,6 @@ function Lotto7() {
                                             ))}
                                         </td>
                                         <td>{item.rank}</td>
-                                        {/* <td>{item.money}</td> */}
                                         <td><Button variant="danger" size="sm" value={item.index} block onClick={removeLuckyNumber}>行削除</Button></td>
                                     </tr>
                                 </React.Fragment>
