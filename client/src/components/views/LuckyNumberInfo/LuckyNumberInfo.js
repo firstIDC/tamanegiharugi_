@@ -15,7 +15,7 @@ function LuckyNumberInfo(props) {
 
     useEffect(() => {
         setSelectDaysList(util.createSelectDaysList);
-        if (props.match.params !== null) {
+        if (Object.keys(props.match.params).length !== 0) {
             getLuckyNumber(props.match.params.year, props.match.params.month, props.match.params.type)
             document.getElementById("selectedType").value = props.match.params.type
             setTimeout(function(){ document.getElementById("selectedDay").value = `${props.match.params.year}年${props.match.params.month}月`; }, 300);
