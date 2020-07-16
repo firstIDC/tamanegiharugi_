@@ -1,0 +1,65 @@
+/* モバイル以外 */
+    @media (min-width: 576px){
+        .modal-dialog {
+            max-width: 500px;
+            margin: 16.75rem auto;
+        }
+
+        .win1st{
+            height: 15rem;
+            background-image: url(/imgs/1st.png);
+            background-repeat: no-repeat;
+            background-position-y: center;
+            margin-left: 25%;
+        }
+
+        .win2st{
+            height: 15rem;
+            background-image: url(/imgs/2st.png);
+            background-repeat: no-repeat;
+            background-position-y: center;
+            margin-left: 25%;
+        }
+
+        .win3st{
+            height: 15rem;
+            background-image: url(/imgs/3st.png);
+            background-repeat: no-repeat;
+            background-position-y: center;
+            margin-left: 25%;
+        }
+    }
+
+/* モバイル */
+    @media (max-width: 576px) {
+        /* modal */
+            .modal-dialog {
+                max-width: 350px;
+                margin: 12.75rem auto;
+                pointer-events: none;
+            }
+
+            .win1st{
+                height: 15rem;
+                background-image: url(/imgs/1st.png);
+                background-repeat: no-repeat;
+                background-position-y: center;
+                margin-left: 13%;
+            }
+    
+            .win2st{
+                height: 15rem;
+                background-image: url(/imgs/2st.png);
+                background-repeat: no-repeat;
+                background-position-y: center;
+                margin-left: 13%;
+            }
+    
+            .win3st{
+                height: 15rem;
+                background-image: url(/imgs/3st.png);
+                background-repeat: no-repeat;
+                background-position-y: center;
+                margin-left: 13%;
+            }
+        }

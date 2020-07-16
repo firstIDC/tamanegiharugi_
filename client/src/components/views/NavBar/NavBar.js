@@ -24,9 +24,10 @@ function NavBar() {
         <div className="menu_left">
           <LeftMenu mode="horizontal" />
         </div>
-        <div className="menu_rigth">
+        {/* Todo: ログインボタン */}
+        {/* <div className="menu_rigth">
           <RightMenu mode="horizontal" />
-        </div>
+        </div> */}
         <Button
           className="menu__mobile-button"
           type="primary"

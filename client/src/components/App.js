@@ -30,6 +30,7 @@ function App() {
           <Route exact path="/lotto7" component={Auth(Lotto7, null)} />
           <Route exact path="/minilotto" component={Auth(LottoMini, null)} />
           <Route exact path="/luckyNumberInfo" component={Auth(LuckyNumberInfo, null)} />
+          <Route exact path="/luckyNumberInfo/:year/:month/:type" component={Auth(LuckyNumberInfo, null)} />
           {/* <Route exact path="/login" component={Auth(LoginPage, false)} />
           <Route exact path="/register" component={Auth(RegisterPage, false)} />
           <Route exact path="/movie/:movieId" component={Auth(MovieDetail, null)} />

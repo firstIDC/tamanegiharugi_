@@ -1,22 +1,31 @@
 import React, { useEffect, useState } from 'react'
-import { Container, Table, Form, FormControl, Button} from 'react-bootstrap';
+import { Container, Table, FormControl, Button} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import ModalBase from '../commons/modalBase'
+import YearMonthBase from '../commons/yearMonthBase'
+import GroupBase from '../commons/groupBase'
+import Loading from '../commons/loading'
 import './LottoMini.css'
 import $ from "jquery";
 const axios = require("axios");
 const util = require('../../../util/util');
-const moment = require("moment")
+// const moment = require("moment")
 
 function LottoMini() {
 
     const [isValidation, setisValidation] = useState(false)
-    const [luckyNumberLine, setLuckyNumberLine] = useState([])
-    const [LuckyNumberInfoList, setluckyNumberInfoList] = useState([])
+    const [UserInputNumber, setUserInputNumber] = useState([])
+    const [LuckyNumberOrigin, setLuckyNumberOrigin] = useState([])
+    const [WinMoney, setWinMoney] = useState([])
+    const [SelectedLuckyMainNumber, setSelectedLuckyMainNumber] = useState([])
+    const [SelectedLuckyBonusNumber, setSelectedLuckyBonusNumber] = useState([])
     const [LuckyNumberGroupList, setluckyNumberGroupList] = useState([])
     const [selectDaysList, setSelectDaysList] = useState([])
+    const [show, setShow] = useState(false);
+    const [winNum, setwinNum] = useState()
 
     useEffect(() => {
-        setLuckyNumberLine([
+        setUserInputNumber([
                         {"index": 1,"luckyNumbers":["","","","",""]
                         ,"winNumber" : null,"rank" : null,"money" : null}
                         ,{"index": 2,"luckyNumbers":["","","","",""]
@@ -28,51 +37,28 @@ function LottoMini() {
                         ,{"index": 5,"luckyNumbers":["","","","",""]
                         ,"winNumber" : null,"rank" : null,"money" : null}
                     ]);
-        const today = moment();
-        let thisYear = today.year();
-        let thisMonth = () => {
-            if ((('0' + today.month()).slice(-2)) === "00") {
-                thisYear = (today.year()-1)
-                return "12"
-            } else {return (('0' + today.month()).slice(-2));}
-        };
-
-        getLuckyNumber(thisYear, thisMonth())
-
-        axios.get("/api/luckyNumber/getSelectDaysList").then(res => {
-            setSelectDaysList(createSelectDaysList());
-            document.getElementById("selectedDay").value = null;
-        })
+        setSelectDaysList(util.createSelectDaysList)
+        setTimeout(function(){ document.getElementById("selectedDay").value = null; }, 300);
     }, [])
 
-    const checkWinLotto = () => {
+    const showToggle = () => setShow(!show)
+
+    const checkWinLotto = async () => {
         //入力本数字
-        const numbersList = takeLuckyNumber();
+        const numbersList = util.takeLuckyNumber();
 
-        //区別
-        const group = document.getElementById("selectedGroup").value;
+        let winResult = checkLottoMini(numbersList, SelectedLuckyMainNumber, SelectedLuckyBonusNumber);
 
-        for (let i = 0; i < LuckyNumberInfoList.length; i++) {
-            if (LuckyNumberInfoList[i].区別 === group) {
-                const checkMainNum = [
-                    LuckyNumberInfoList[i].本数字1
-                    ,LuckyNumberInfoList[i].本数字2
-                    ,LuckyNumberInfoList[i].本数字3
-                    ,LuckyNumberInfoList[i].本数字4
-                    ,LuckyNumberInfoList[i].本数字5
-                ]
-                const checkBonusNum = [
-                    LuckyNumberInfoList[i].ボーナス数字1.substring(1,3)
-                ]
-                checkLottoMini(numbersList, checkMainNum, checkBonusNum);
-                break; 
-            }
+        window.scrollTo(0,0)
+        if (winResult !== 99 && winResult < 4) {
+            setwinNum(winResult)
+            showToggle();
         }
-
-        javascript:window.scrollTo(0,0)
     }
 
+    //当選確認
     const checkLottoMini = (numbersList, checkMainNum, checkBonusNum) => {
+        let winResult = 99;
         if (isValidation) {
             let luckyNumberFinalResult = [];
             for (let i = 0; i < numbersList.length; i++) {
@@ -81,20 +67,30 @@ function LottoMini() {
                     case 5:
                         //1等(申込数字が本数字5個と全て一致)
                         luckyNumberFinalResult.push({"index":numbersList[i].index,"rank": "1等","winNumber":result[1]})
+                        winResult = 1
                         break;
                     case 4:
                         const bonusResult2stAnd3st = util.isMatchNum(numbersList[i].luckyNumbers,checkBonusNum);
                         if (bonusResult2stAnd3st[0] > 0) {
                             //2等(申込数字が本数字4個と一致し、更にボーナス数字1個と一致) 
                             luckyNumberFinalResult.push({"index":numbersList[i].index,"rank": "2等","winNumber":result[1].concat(bonusResult2stAnd3st[1]),"bonusNums": bonusResult2stAnd3st[1]})
+                            if (winResult > 2) {
+                                winResult = 2
+                            }
                         } else {
                             //3等(申込数字が本数字4個と一致)
                             luckyNumberFinalResult.push({"index":numbersList[i].index,"rank": "3等","winNumber":result[1]})
+                            if (winResult > 3) {
+                                winResult = 3
+                            }
                         }
                         break;
                     case 3:
                         //4等(申込数字が本数字3個と一致)
                         luckyNumberFinalResult.push({"index":numbersList[i].index,"rank": "4等","winNumber":result[1]})
+                        if (winResult > 4) {
+                            winResult = 4
+                        }
                         break;
                     default:
                         //残念
@@ -103,7 +99,7 @@ function LottoMini() {
                 }
             }
 
-            setLuckyNumberLine(luckyNumberLine.filter(i => {
+            setUserInputNumber(UserInputNumber.filter(i => {
                 luckyNumberFinalResult.filter(x => {
                     if (i.index === Number(x.index)) {
                         i.rank = x.rank
@@ -111,47 +107,16 @@ function LottoMini() {
                         i.money = "未定"
                     }
                 })
-                return luckyNumberLine
+                return UserInputNumber
             }))
-            console.log(luckyNumberLine);
+            return winResult
         } else {
             alert("本数字入力欄に誤りがあります。赤い枠の所を正しく入力してください。")
         }
     }
 
-    const takeLuckyNumber = () => {
-        const iLength = document.getElementsByClassName("luckyNumberBox").length;
-        let numbersList = [];
-        for (let i = 0; i < iLength; i++) {
-            const index = document.getElementsByClassName("luckyNumberBox")[i].parentElement.children[0].innerText;
-            const jLength =  document.getElementsByClassName("luckyNumberBox")[i].children.length;
-            let numbers = [{
-                "index": null
-                ,"luckyNumbers": []
-            }];
-            for (let j = 0; j < jLength; j++) {
-                
-                const value = document.getElementsByClassName("luckyNumberBox")[i].children[j].value;
-                if (value !== "") {
-                    numbers[0].luckyNumbers.push(value)
-                } else {
-                    numbers[0].luckyNumbers.push("00")
-                }
-            }
-            
-            //"00"외에 다른게 들어있으면 push
-            for (let z = 0; z < numbers[0].luckyNumbers.length; z++) {
-                if (numbers[0].luckyNumbers[z] !== "00" ) {
-                    numbers[0].index = index;
-                    numbersList.push(numbers[0])
-                    break
-                }
-            }
-        }
-        return numbersList;
-    }
-
-    const onLuckyNumHandler = (event) => {
+    //ユーザーから番号入力時
+    const luckyNumInput = (event) => {
         
         const mainLocation = Number(event.target.parentElement.parentElement.children[0].innerText);
         let subLocation;
@@ -163,15 +128,16 @@ function LottoMini() {
             
         }
         if (subLocation != null) {
-            setLuckyNumberLine(luckyNumberLine.filter(i => {
+            setUserInputNumber(UserInputNumber.filter(i => {
                 if (i.index === mainLocation) {
                     i.luckyNumbers[subLocation] = event.target.value
                 }
-                return luckyNumberLine;
+                return UserInputNumber;
             }));
         }
     }
 
+    //入力バリデーションチェック
     const checkValidation = (event) => {
         const mainLocation = Number(event.target.parentElement.parentElement.children[0].innerText-1);
         let subLocation;
@@ -180,25 +146,24 @@ function LottoMini() {
                 subLocation = i;
                 break;
             }
-            
         }
 
-        let val = Number(luckyNumberLine[mainLocation].luckyNumbers[subLocation]);
-        if (luckyNumberLine[mainLocation].luckyNumbers[subLocation] !== "") {
+        let val = Number(UserInputNumber[mainLocation].luckyNumbers[subLocation]);
+        if (UserInputNumber[mainLocation].luckyNumbers[subLocation] !== "") {
             if (0 === val || val >= 32) {
                 event.target.classList.add("luckyNumberError")
                 setisValidation(false);
             }else {
-                setLuckyNumberLine(luckyNumberLine.filter(i => {
+                setUserInputNumber(UserInputNumber.filter(i => {
                     if (i.index === (mainLocation+1)) {
                         i.luckyNumbers[subLocation] = ('0' + val).slice(-2)
                     }
-                    return luckyNumberLine;
+                    return UserInputNumber;
                 }));
     
                 let overlapCount = 0;        
-                for (let j = 0; j < luckyNumberLine[mainLocation].luckyNumbers.length; j++) {
-                    if (luckyNumberLine[mainLocation].luckyNumbers[j] === (('0' + val).slice(-2))) overlapCount++
+                for (let j = 0; j < UserInputNumber[mainLocation].luckyNumbers.length; j++) {
+                    if (UserInputNumber[mainLocation].luckyNumbers[j] === (('0' + val).slice(-2))) overlapCount++
                 }
                 if (overlapCount > 1) {
                     if (!event.target.classList.contains("luckyNumberError")) {
@@ -218,22 +183,26 @@ function LottoMini() {
             setisValidation(true);
         }
     }
+
+    //ホームページから、ロト情報取得する
     const getLuckyNumber = (thisYear, thisMonth) => {
-        // loading On
         $('#loading').show();
+
         const endUrl = `/api/luckyNumber/getLuckyNumber?year=${thisYear}&month=${thisMonth}&type=miniloto`
         axios.get(endUrl).then(res => {
             if (res.data.success === true) {
-                console.log(res)
-                setluckyNumberInfoList(res.data.luckyNumber)
+                console.log(res.data.luckyNumber);
+
+                setLuckyNumberOrigin(res.data.luckyNumber)
+                
                 let luckyNumberGroups = [];
                 for (let i = 0; i < res.data.luckyNumber.length; i++) {
                     luckyNumberGroups.push(res.data.luckyNumber[i].区別)
                 }
+                
                 setluckyNumberGroupList(luckyNumberGroups)
                 document.getElementById("selectedGroup").value = null;
 
-                // loading Off
                 $('#loading').hide();
 
             } else {
@@ -242,95 +211,111 @@ function LottoMini() {
         })
     }
 
+    //年月押下時
     const selectDay = () => {
         const selectedDay = document.getElementById("selectedDay").value;
         const selectedYear = selectedDay.substring(0, 4);
         const selectedMonth = selectedDay.substring(5, 7);
         document.getElementById("choiceDay").value = selectedDay;
+
         $("#selectDayDiv").hide(700)
         $("#selectGroupDiv").show(700)
+
         getLuckyNumber(selectedYear, selectedMonth)
     }
 
+    //区別押下時
     const selectGroup = () => {
         const group = document.getElementById("selectedGroup").value;
         document.getElementById("choiceGroup").value = group
         $("#selectGroupDiv").hide(700)
         $(".lotoLogo").hide(700)
-        $("#selectLuckyNumverDiv").show(700)
-    }
+        $("#selectLuckyNumverDiv").show(700) 
 
-    const landingPageReset = () => {
-        window.location.reload(false);    
-    }
+        for (let i = 0; i < LuckyNumberOrigin.length; i++) {
+            if (LuckyNumberOrigin[i].区別 === group) {
+                const checkMainNum = [
+                    LuckyNumberOrigin[i].本数字1
+                    ,LuckyNumberOrigin[i].本数字2
+                    ,LuckyNumberOrigin[i].本数字3
+                    ,LuckyNumberOrigin[i].本数字4
+                    ,LuckyNumberOrigin[i].本数字5
+                ]
+                const checkBonusNum = [
+                    LuckyNumberOrigin[i].ボーナス数字1.substring(1,3)
+                ]
 
-    const createSelectDaysList = () => {
-        
-        let selectDaysList = [];
-        
-        let thisYear = null ;
-        let thisMonth = null;
-        const today = moment();
-        const createUnit = 12;
-        for (let i = 0; i < createUnit; i++) {
-            if (i === 0) {
-                thisYear = today.year();
-                thisMonth = ('0' + (today.month()+1)).slice(-2);
-            }else {
-                const targetDate = today.subtract(1, 'months');
-                thisYear = targetDate.year();
-                thisMonth = (('0' + (targetDate.month()+1).toString()).slice(-2));
+                const winMoneyList = [{"rank" : 1 ,"money": LuckyNumberOrigin[i].等1金額}
+                                    ,{"rank" : 2 ,"money": LuckyNumberOrigin[i].等2金額}
+                                    ,{"rank" : 3 ,"money": LuckyNumberOrigin[i].等3金額}
+                                    ,{"rank" : 4 ,"money": LuckyNumberOrigin[i].等4金額}
+                                    ,{"rank" : 5 ,"money": LuckyNumberOrigin[i].等5金額}
+                                    ,{"rank" : 6 ,"money": LuckyNumberOrigin[i].等6金額}]
+
+                setWinMoney(winMoneyList);
+                
+                setSelectedLuckyMainNumber(checkMainNum);
+                setSelectedLuckyBonusNumber(checkBonusNum);
+                util.createLuckyNum(checkMainNum, "choiceMainNum")
+                util.createLuckyNum(checkBonusNum, "choiceBonusNum")
+                break; 
             }
-            selectDaysList[i] = thisYear + "年" + thisMonth  + "月"
         }
-        return selectDaysList;
     }
 
+    //行追加
     const addLuckyNumber = ()  => {
-        setLuckyNumberLine(luckyNumberLine.concat([{"index": (Number(luckyNumberLine[luckyNumberLine.length -1].index)+1),"luckyNumbers":["","","","",""],"winNumber" : null,"rank" : null,"money" : null}]));}
-
-    const removeLuckyNumber = (event)  => {
-        setLuckyNumberLine(luckyNumberLine.filter(i => {if (i.index !== Number(event.target.value)) return luckyNumberLine}))
+        setUserInputNumber(UserInputNumber.concat([{"index": (Number(UserInputNumber[UserInputNumber.length -1].index)+1),"luckyNumbers":["","","","",""],"winNumber" : null,"rank" : null,"money" : null}]));
     }
+    //行削除
+    const removeLuckyNumber = (event)  => {
+        setUserInputNumber(UserInputNumber.filter(i => {if (i.index !== Number(event.target.value)) return UserInputNumber}))
+    }
+
+    
     return (
-        <div>
-        <div id="loading"><img id="loading-image" src="/imgs/loading.gif" alt="Loading..." /></div>
+        <>
+        {winNum && <ModalBase 
+            handleCloseFn = {showToggle}
+            showParam = {show}
+            winNumParam = {winNum}
+            winMoney = {WinMoney}
+        />}
+        <Loading />
         <br />
         <Container>
             <div className="lotoLogo">
                 <img src="/imgs/miniloto.png" alt="miniloto" />
             </div>
             <div id='selectDayDiv'>
-                <Form>
-                    <Form.Group controlId="exampleForm.SelectCustomHtmlSize">
-                        <Form.Label>当せん情報の年月を選択してください。</Form.Label>
-                        <Form.Control id="selectedDay" as="select" htmlSize={3} custom onChange={selectDay}>
-                            {selectDaysList && selectDaysList.map((select, index) => (
-                                <React.Fragment key={index}>
-                                    <option>{select}</option>
-                                </React.Fragment>
-                            ))}
-
-                        </Form.Control>
-                    </Form.Group>
-                </Form>
+                <YearMonthBase 
+                    selectDayFn = {selectDay}
+                    YearMonthList = {selectDaysList}
+                />
             </div>
             <div id='selectGroupDiv'>
-                <Form>
-                    <Form.Group controlId="exampleForm.SelectCustomHtmlSize">
-                        <Form.Label>当せん情報の区別を選択してください。</Form.Label>
-                        <Form.Control id="selectedGroup" as="select" htmlSize={3} custom onChange={selectGroup}>
-                            {LuckyNumberGroupList && LuckyNumberGroupList.map((select, index) => (
-                                <React.Fragment key={index}>
-                                    <option>{select}</option>
-                                </React.Fragment>
-                            ))}
-                        </Form.Control>
-                    </Form.Group>
-                </Form>
+                <GroupBase 
+                    selectGroupFn = {selectGroup}
+                    groupList = {LuckyNumberGroupList}
+                    pageRefresh = {util.pageRefresh}
+                />
             </div>
             <div id='selectLuckyNumverDiv'>
-                <div class="div-style">
+                <div className="div-style-7-3">
+                    <ul>
+                        <li>
+                            <label>本数字</label>
+                            <div className='input-group' id='choiceMainNum'></div>
+                            <span>当選本数字</span>
+                        </li>
+                        <li>
+                            <label>ボーナス数字</label>
+                            <div className='input-group' id='choiceBonusNum'></div>
+                            <span>当選ボーナス数字</span>
+                        </li>
+                    </ul>
+                </div>
+                <div className="div-style-5-5">
                     <ul>
                         <li>
                             <label>年度</label>
@@ -351,12 +336,11 @@ function LottoMini() {
                                 <th>#</th>
                                 <th>本数字</th>
                                 <th>等数</th>
-                                {/* <th>当選金額</th> */}
                                 <th>削除</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {luckyNumberLine && luckyNumberLine.map((item, i) => (
+                            {UserInputNumber && UserInputNumber.map((item, i) => (
                                 <React.Fragment key={i}>
                                     <tr>
                                         <td>{item.index}</td>
@@ -364,11 +348,10 @@ function LottoMini() {
                                             {item.luckyNumbers.map((target,j) => (
                                                 <FormControl key={j} type='tel' 
                                                 className={'luckyNumber ' + (item.winNumber ? item.winNumber.indexOf(target) !== -1  ? "winNum" : "" : "")} 
-                                                value={target} minLength="1" maxLength="2" onChange={onLuckyNumHandler} onBlur={checkValidation.bind(this)}/>
+                                                value={target} minLength="1" maxLength="2" onChange={luckyNumInput} onBlur={checkValidation.bind(this)}/>
                                             ))}
                                         </td>
                                         <td>{item.rank}</td>
-                                        {/* <td>{item.money}</td> */}
                                         <td><Button variant="danger" size="sm" value={item.index} block onClick={removeLuckyNumber}>行削除</Button></td>
                                     </tr>
                                 </React.Fragment>
@@ -380,12 +363,13 @@ function LottoMini() {
                             </tr>
                         </tbody>
                     </Table> 
-                    <Button variant="info" size="lg" block onClick={checkWinLotto}>結果確認</Button>
-                    <Button variant="success" size="lg" block onClick={landingPageReset}>最初に戻る</Button>
+                    <Button variant="success" size="lg" block onClick={checkWinLotto}>結果確認</Button>
+                    <br />
+                    <Button variant="danger" size="lg" block onClick={util.pageRefresh}>最初に戻る</Button>
                 </form>
             </div>
         </Container>
-        </div>
+        </>
     )
 }
 

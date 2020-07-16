@@ -12,7 +12,7 @@ const { LuckyNumberMini } = require('../models/LuckyNumberMini');
  * @param {string} year : 年
  * @param {string} month : 月
  * @param {string} type : loto6、loto7、miniloto
- * ex) "/getLuckyNumber?year=2020&month=06" 
+ * ex) "/getLuckyNumber?year=2020&month=06&type=loto7"  
  * 
  */
 router.get("/getLuckyNumber", async (req, res) => {
@@ -48,7 +48,20 @@ router.get("/getLuckyNumber", async (req, res) => {
                 await util.luckyNumberCrawling(req.query.year, req.query.month, "loto6")
                 .then(async luckyNumbers => {
                     let isSuccess = false
-                    for (let i = 0; i < luckyNumbers.length; i++) {
+
+                    let loopLength = 0;
+                    for (let j = 0; j < luckyNumbers.length; j++) {
+                        if (luckyNumbers[j].本数字1 == "" && luckyNumbers[j].本数字2 == "" && luckyNumbers[j].本数字3 == "" ) {
+                            return res.status(200).json({success: isSuccess})
+                        }
+                        loopLength++;
+                    }
+
+
+
+
+
+                    for (let i = 0; i < loopLength; i++) {
                         const collaction = new LuckyNumber6(luckyNumbers[i]);
                         try {
                             await collaction.save();
@@ -126,15 +139,15 @@ router.get("/getLuckyNumber", async (req, res) => {
  * 当せん情報の年月取得する
  * 
  */
-router.get("/getSelectDaysList", async (req, res) => {
-    LuckyNumber7.find().limit(20).select('年月日')
-            .distinct('年月日').exec(async (err, selectDays) => {
-                if (err) return res.status(400).send(err)
-                selectDays.sort(function (a, b) {
-                    return b.localeCompare(a);
-                });
-                return res.status(200).json({success: true, selectDays})
-            })
-});
+// router.get("/getSelectDaysList", async (req, res) => {
+//     LuckyNumber7.find().limit(20).select('年月日')
+//             .distinct('年月日').exec(async (err, selectDays) => {
+//                 if (err) return res.status(400).send(err)
+//                 selectDays.sort(function (a, b) {
+//                     return b.localeCompare(a);
+//                 });
+//                 return res.status(200).json({success: true, selectDays})
+//             })
+// });
 
 module.exports = router;

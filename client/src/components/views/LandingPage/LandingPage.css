@@ -32,16 +32,37 @@
     }
 
 /* rigthBox */
-    .topBox .rigthBox .iPhoneImg{ 
+    .topBox .rigthBox .mySlides{ 
         width: 100%;
         height: 100%;
-        background-image: url(/imgs/iphone7.png);
-        background-repeat: no-repeat;
-        background-size: contain;
-        background-position-y: center;
+    }
+    
+    /* Fading animation */
+    .topBox .rigthBox div.fade {
+        -webkit-animation-name: fade;
+        -webkit-animation-duration: 1.5s;
+        animation-name: fade;
+        animation-duration: 1.5s;
     }
 
-
+    .topBox .rigthBox div.fade img{
+        height: 32rem;
+    }
+    
+    @-webkit-keyframes fade {
+        from {opacity: .4} 
+        to {opacity: 1}
+    }
+    
+    @keyframes fade {
+        from {opacity: .4} 
+        to {opacity: 1}
+    }
+    
+    /* On smaller screens, decrease text size */
+    @media only screen and (max-width: 300px) {
+        .text {font-size: 11px}
+    }
 
 /* loading */
     #loading {

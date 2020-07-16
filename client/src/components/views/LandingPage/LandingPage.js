@@ -2,7 +2,6 @@ import React from 'react'
 import { Container } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './LandingPage.css'
-import Modal from '../commons/modal-base'
 // import $ from "jquery";
 // const axios = require("axios");
 // const util = require('../../../util/util');
@@ -10,21 +9,21 @@ import Modal from '../commons/modal-base'
 
 
 function LandingPage() {
+    var slideIndex = 0;
+    const showSlides = () => {
+        console.log(slideIndex)
+        var slides = document.getElementsByClassName("mySlides");
+        console.log(slides);
+        for (var i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";  
+        }
+        slideIndex++;
+        if (slideIndex > slides.length) {slideIndex = 1}    
+        slides[slideIndex-1].style.display = "block";  
+        setTimeout(showSlides, 3000); // Change image every 2 seconds
+    }
 
-    
-
-    // function ModalPage() {
-    //     console.log("ModalPage22");
-    //     return (
-    //       <Modal visible={true}>Hello</Modal>
-    //     )
-    //   }
-    
-    //   console.log("ModalPage11")
-    //   ModalPage()
-    //   console.log("ModalPage33")
-
-
+    window.addEventListener('load', showSlides);
     return (
         <div className='topBody'>
             <hr/>
@@ -42,7 +41,18 @@ function LandingPage() {
                         </div>
                     </div>
                     <div className='col-12 col-sm-6 rigthBox'>
-                        <div className='iPhoneImg'></div>
+                        <div className="mySlides fade" style={{opacity: 'initial'}}>
+                            <img src="/imgs/loto7-1.png" />
+                        </div>
+                        <div className="mySlides fade" style={{opacity: 'initial'}}>
+                         <img src="/imgs/loto7-2.png" />
+                        </div>
+                        <div className="mySlides fade" style={{opacity: 'initial'}}>
+                            <img src="/imgs/loto7-3.png" />
+                        </div>
+                        <div className="mySlides fade" style={{opacity: 'initial'}}>
+                            <img src="/imgs/loto7-4.png" />
+                        </div>
                     </div>
                 </div>
             </Container>

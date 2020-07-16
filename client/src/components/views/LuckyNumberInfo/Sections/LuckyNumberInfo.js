@@ -30,6 +30,7 @@ function LuckyNumberInfo(props) {
                     <th>ボーナス数字</th>
                     <td>{props.ボーナス数字1}</td>
                     <td>{props.ボーナス数字2}</td>
+                    <td colSpan='5'></td>
                 </tr>
                 <tr className="luckyBonusRight">
                     <th>1等</th>
