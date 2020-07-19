@@ -24,7 +24,16 @@ router.get("/getLuckyNumber", async (req, res) => {
                 await util.luckyNumberCrawling(req.query.year, req.query.month, "loto7")
                 .then(async luckyNumbers => {
                     let isSuccess = false
-                    for (let i = 0; i < luckyNumbers.length; i++) {
+
+                    let loopLength = 0;
+                    for (let j = 0; j < luckyNumbers.length; j++) {
+                        if (luckyNumbers[j].本数字1 == "" && luckyNumbers[j].本数字2 == "" && luckyNumbers[j].本数字3 == "" ) {
+                            return res.status(200).json({success: isSuccess})
+                        }
+                        loopLength++;
+                    }
+
+                    for (let i = 0; i < loopLength; i++) {
                         const collaction = new LuckyNumber7(luckyNumbers[i]);
                         try {
                             await collaction.save();
@@ -57,10 +66,6 @@ router.get("/getLuckyNumber", async (req, res) => {
                         loopLength++;
                     }
 
-
-
-
-
                     for (let i = 0; i < loopLength; i++) {
                         const collaction = new LuckyNumber6(luckyNumbers[i]);
                         try {
@@ -85,7 +90,16 @@ router.get("/getLuckyNumber", async (req, res) => {
                 await util.luckyNumberCrawling(req.query.year, req.query.month, "miniloto")
                 .then(async luckyNumbers => {
                     let isSuccess = false
-                    for (let i = 0; i < luckyNumbers.length; i++) {
+
+                    let loopLength = 0;
+                    for (let j = 0; j < luckyNumbers.length; j++) {
+                        if (luckyNumbers[j].本数字1 == "" && luckyNumbers[j].本数字2 == "" && luckyNumbers[j].本数字3 == "" ) {
+                            return res.status(200).json({success: isSuccess})
+                        }
+                        loopLength++;
+                    }
+
+                    for (let i = 0; i < loopLength; i++) {
                         const collaction = new LuckyNumberMini(luckyNumbers[i]);
                         try {
                             await collaction.save();

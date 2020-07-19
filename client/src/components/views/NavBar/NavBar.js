@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import LeftMenu from './Sections/LeftMenu';
-import RightMenu from './Sections/RightMenu';
-import { Drawer, Button, Icon } from 'antd';
+// import RightMenu from './Sections/RightMenu';
+import { Drawer, Button } from 'antd';
+import { PropertySafetyOutlined } from '@ant-design/icons';
 import './Sections/Navbar.css';
 
 function NavBar() {
@@ -24,19 +25,22 @@ function NavBar() {
         <div className="menu_left">
           <LeftMenu mode="horizontal" />
         </div>
+
         {/* Todo: ログインボタン */}
         {/* <div className="menu_rigth">
           <RightMenu mode="horizontal" />
         </div> */}
+        
         <Button
           className="menu__mobile-button"
           type="primary"
           onClick={showDrawer}
         >
-          <Icon type="align-right" />
+          {/* <Icon type="align-right" /> */}
+          <PropertySafetyOutlined className="mobileIcon" />
         </Button>
         <Drawer
-          title="Basic Drawer"
+          title="一発逆転"
           placement="right"
           className="menu_drawer"
           closable={false}
@@ -44,7 +48,8 @@ function NavBar() {
           visible={visible}
         >
           <LeftMenu mode="inline" />
-          <RightMenu mode="inline" />
+          
+          {/* <RightMenu mode="inline" /> */}
         </Drawer>
       </div>
     </nav>

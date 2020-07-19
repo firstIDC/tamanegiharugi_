@@ -8,6 +8,7 @@ function yearMonthBase(props) {
             <Form.Group>
                 <Form.Label>当せん情報の年月を選択してください。</Form.Label>
                 <Form.Control id="selectedDay" as="select" htmlSize={3} custom onChange={props.selectDayFn}>
+                    <option disabled selected>選択してください。</option>
                     {props.YearMonthList && props.YearMonthList.map((select, index) => (
                         <React.Fragment key={index}>
                             <option>{select}</option>

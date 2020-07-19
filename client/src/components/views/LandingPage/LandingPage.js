@@ -11,9 +11,7 @@ import './LandingPage.css'
 function LandingPage() {
     var slideIndex = 0;
     const showSlides = () => {
-        console.log(slideIndex)
         var slides = document.getElementsByClassName("mySlides");
-        console.log(slides);
         for (var i = 0; i < slides.length; i++) {
             slides[i].style.display = "none";  
         }
@@ -26,7 +24,6 @@ function LandingPage() {
     window.addEventListener('load', showSlides);
     return (
         <div className='topBody'>
-            <hr/>
             <Container>
                 <div className='topBox row'>
                     <div className='col-12 col-sm-6 leftBox'>
@@ -42,16 +39,16 @@ function LandingPage() {
                     </div>
                     <div className='col-12 col-sm-6 rigthBox'>
                         <div className="mySlides fade" style={{opacity: 'initial'}}>
-                            <img src="/imgs/loto7-1.png" />
+                            <img src="/imgs/loto7-1.png" alt='loto7-1.png' />
                         </div>
                         <div className="mySlides fade" style={{opacity: 'initial'}}>
-                         <img src="/imgs/loto7-2.png" />
+                         <img src="/imgs/loto7-2.png" alt='loto7-2.png' />
                         </div>
                         <div className="mySlides fade" style={{opacity: 'initial'}}>
-                            <img src="/imgs/loto7-3.png" />
+                            <img src="/imgs/loto7-3.png" alt='loto7-3.png' />
                         </div>
                         <div className="mySlides fade" style={{opacity: 'initial'}}>
-                            <img src="/imgs/loto7-4.png" />
+                            <img src="/imgs/loto7-4.png" alt='loto7-4.png' />
                         </div>
                     </div>
                 </div>

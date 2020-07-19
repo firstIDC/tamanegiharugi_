@@ -8,6 +8,7 @@ function groupBase(props) {
             <Form.Group>
                 <Form.Label>当せん情報の区別を選択してください。</Form.Label>
                 <Form.Control id="selectedGroup" as="select" htmlSize={3} custom onChange={props.selectGroupFn}>
+                    <option disabled selected>選択してください。</option>
                     {props.groupList && props.groupList.map((select, index) => (
                         <React.Fragment key={index}>
                             <option>{select}</option>

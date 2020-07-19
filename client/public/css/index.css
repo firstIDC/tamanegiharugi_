@@ -1,1 +1,11 @@
 * { font-family: "Sawarabi Gothic"; }
+#mainBox {
+    padding-top: 7rem;
+}
+
+/* モバイル */
+@media (max-width: 576px) {
+    #mainBox {
+        padding-top: 3rem;
+    }
+}

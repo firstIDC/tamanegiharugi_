@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Container, Table, FormControl, Button} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import ModalBase from '../commons/modalBase'
+import WinModalBase from '../commons/winModalBase'
 import YearMonthBase from '../commons/yearMonthBase'
 import GroupBase from '../commons/groupBase'
 import Loading from '../commons/loading'
@@ -38,7 +38,7 @@ function Lotto6() {
                         ,"winNumber" : null,"rank" : null,"money" : null}
                     ]);
         setSelectDaysList(util.createSelectDaysList)
-        setTimeout(function(){ document.getElementById("selectedDay").value = null; }, 300);
+        // setTimeout(function(){ document.getElementById("selectedDay").value = null; }, 300);
     }, [])
 
     const showToggle = () => setShow(!show)
@@ -209,7 +209,7 @@ function Lotto6() {
                 }
                 
                 setluckyNumberGroupList(luckyNumberGroups)
-                document.getElementById("selectedGroup").value = null;
+                // document.getElementById("selectedGroup").value = null;
 
                 $('#loading').hide();
 
@@ -283,11 +283,12 @@ function Lotto6() {
     
     return (
         <>
-        {winNum && <ModalBase 
+        {winNum && <WinModalBase 
             handleCloseFn = {showToggle}
             showParam = {show}
             winNumParam = {winNum}
             winMoney = {WinMoney}
+            checkAddress = {[document.getElementById("choiceDay").value, document.getElementById("choiceDay").value , "loto6"]}
         />}
         <Loading />
         <br />

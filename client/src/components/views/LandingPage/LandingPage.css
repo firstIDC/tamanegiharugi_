@@ -8,6 +8,7 @@
 /* topBox */
     .topBox {
         width: 100%;
+        margin: auto;
     }
 /* leftBox */
     .topBox .leftBox{
@@ -17,18 +18,19 @@
     .topBox .leftBox .leftBox_top h2,
     .topBox .leftBox .leftBox_top h4{
         color: rgb(83, 83, 83);
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6)
     }
 
     .topBox .leftBox .leftBox_btm {
-        margin-top: 40px;
-        padding-right: 5%;
+        margin-top: 25px;
     }
 
-    .topBox .leftBox .leftBox_btm a{
+    .topBox .leftBox .leftBox_btm .btn{
         border-radius: 7px;
         margin-bottom: 5px;
         height: 50px;
         font-size: 23px;
+        display: block;
     }
 
 /* rigthBox */
@@ -47,6 +49,8 @@
 
     .topBox .rigthBox div.fade img{
         height: 32rem;
+        margin: 0 auto;
+        display: block;
     }
     
     @-webkit-keyframes fade {
@@ -92,13 +96,23 @@
         text-align: center;
         margin-top: 5%;
     }
+/* Modal */
+    .modal-content .modal-body {
+        text-align: center;
+    }
 
 
 /* モバイル */
     @media (max-width: 576px) {
+        .topBody{
+            background-image: url(/imgs/landingBackImg_Edit.png);
+            background-position-y: 100%;
+            background-repeat: repeat-x;
+            background-size: contain;
+            padding-bottom: 3rem;
+        }
         .topBox .leftBox{
-            padding: 3rem 1.5rem;
-            text-align: center;
+            padding: 3rem 1rem 1rem 1rem;
         }
         .topBox .leftBox h2{
             font-size: 2rem;
@@ -106,14 +120,10 @@
         .topBox .leftBox h4{
             font-size: 1rem;
         }
-
+        /* Navロゴ */
+        .menu__mobile-button span.mobileIcon svg {
+            font-size: 26px;
+            transform: translateY(-20%);
+        }
         
-        .topBox .leftBox .leftBox_btm{
-            padding-left: 3rem;
-        }
-        .topBox .rigthBox {
-            height: 30rem;
-            max-width: 100%;
-            padding-left: 20%;
-        }
     }
